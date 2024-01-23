@@ -34,7 +34,7 @@ public class AdminIntegralGradeController
     @ApiOperation(value = "获取积分等级列表")
     @GetMapping("/list")
     public R listAll() {
-        log.info("hi i'm helen");
+        log.info("hi i'm VectorX");
         log.warn("warning!!!");
         log.error("it's a error");
 
