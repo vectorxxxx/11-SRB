@@ -1,6 +1,9 @@
 package xyz.funnyboy.srb.core.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,7 @@ import xyz.funnyboy.srb.core.mapper.UserInfoMapper;
 import xyz.funnyboy.srb.core.pojo.entity.UserAccount;
 import xyz.funnyboy.srb.core.pojo.entity.UserInfo;
 import xyz.funnyboy.srb.core.pojo.entity.UserLoginRecord;
+import xyz.funnyboy.srb.core.pojo.query.UserInfoQuery;
 import xyz.funnyboy.srb.core.pojo.vo.LoginVO;
 import xyz.funnyboy.srb.core.pojo.vo.RegisterVO;
 import xyz.funnyboy.srb.core.pojo.vo.UserInfoVO;
@@ -63,6 +67,13 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         userAccountService.save(userAccount);
     }
 
+    /**
+     * 登录
+     *
+     * @param loginVO 登录 VO
+     * @param ip      ip
+     * @return {@link UserInfoVO}
+     */
     @Override
     public UserInfoVO login(LoginVO loginVO, String ip) {
         // 查询用户信息
@@ -88,5 +99,41 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         BeanUtils.copyProperties(userInfo, userInfoVO);
         userInfoVO.setToken(JwtUtils.createToken(userInfo.getId(), userInfo.getNickName()));
         return userInfoVO;
+    }
+
+    /**
+     * 列表页
+     *
+     * @param pageParam     页面参数
+     * @param userInfoQuery 查询参数
+     * @return {@link IPage}<{@link UserInfo}>
+     */
+    @Override
+    public IPage<UserInfo> listPage(Page<UserInfo> pageParam, UserInfoQuery userInfoQuery) {
+        // 无查询条件
+        if (userInfoQuery == null) {
+            return baseMapper.selectPage(pageParam, null);
+        }
+
+        // 有查询条件
+        final LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<UserInfo>()
+                .eq(StringUtils.isNotBlank(userInfoQuery.getMobile()), UserInfo::getMobile, userInfoQuery.getMobile())
+                .eq(userInfoQuery.getStatus() != null, UserInfo::getStatus, userInfoQuery.getStatus())
+                .eq(userInfoQuery.getUserType() != null, UserInfo::getUserType, userInfoQuery.getUserType());
+        return baseMapper.selectPage(pageParam, queryWrapper);
+    }
+
+    /**
+     * 锁定用户
+     *
+     * @param id     编号
+     * @param status 状态
+     */
+    @Override
+    public void lock(Long id, Integer status) {
+        final UserInfo userInfo = new UserInfo();
+        userInfo.setId(id);
+        userInfo.setStatus(status);
+        baseMapper.updateById(userInfo);
     }
 }
