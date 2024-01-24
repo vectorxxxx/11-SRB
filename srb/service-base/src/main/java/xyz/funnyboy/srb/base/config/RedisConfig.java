@@ -1,4 +1,4 @@
-package xyz.funnyboy.srb.core.config;
+package xyz.funnyboy.srb.base.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
