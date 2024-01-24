@@ -46,6 +46,10 @@ public class Dict implements Serializable
     @ApiModelProperty(value = "编码")
     private String dictCode;
 
+    @ApiModelProperty(value = "是否包含子节点")
+    @TableField(exist = false)
+    private Boolean hasChildren;
+
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
