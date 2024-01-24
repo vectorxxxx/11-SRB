@@ -1,0 +1,19 @@
+server:
+  port: 8130 # 服务端口
+
+spring:
+  devtools:
+    restart:
+      enabled: true  # 开启热部署（更改文件后，自动重启）
+  profiles:
+    active: dev # 环境设置
+  application:
+    name: service-oss # 服务名
+
+# 阿里云OSS
+aliyun:
+  oss:
+    endpoint: oss-cn-shanghai.aliyuncs.com
+    key-id: LTAI5tDvGrZiZ44Zcvp9kYzV
+    key-secret: gSrbXmTmELbSdWEoYXvu4UttATc18x
+    bucket-name: srb-vectorx

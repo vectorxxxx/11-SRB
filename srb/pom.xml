@@ -7,6 +7,8 @@
         <module>common</module>
         <module>service-base</module>
         <module>service-core</module>
+        <module>service-sms</module>
+        <module>service-oss</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -225,6 +227,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- devtools依赖此配置（否则，devtools不生效）。 -->
+                    <fork>true</fork>
+                </configuration>
             </plugin>
         </plugins>
     </build>
