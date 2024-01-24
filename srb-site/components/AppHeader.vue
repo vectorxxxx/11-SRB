@@ -142,7 +142,7 @@ export default {
           token: userInfo.token
         }
       }).then(() => {
-        this.userInfo = JSON.parse(userInfo)
+        this.userInfo = userInfo
       })
     },
 
