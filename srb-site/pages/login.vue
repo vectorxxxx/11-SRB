@@ -52,7 +52,7 @@ export default {
       this.$axios
         .$post('/api/core/userInfo/login', this.userInfo)
         .then((response) => {
-          console.log(response)
+          // 用户信息存入cookie
           cookie.set('userInfo', response.data.userInfo)
           window.location.href = '/user'
         })

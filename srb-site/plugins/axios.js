@@ -2,10 +2,11 @@ import { Message } from 'element-ui'
 import cookie from 'js-cookie'
 
 export default function({ $axios, redirect }) {
+  // axios请求拦截，统一添加header
   $axios.onRequest((config) => {
+    // 添加请求头：token
     let userInfo = cookie.get('userInfo')
     if (userInfo) {
-      // debugger
       userInfo = JSON.parse(userInfo)
       config.headers['token'] = userInfo.token
     }
@@ -16,6 +17,7 @@ export default function({ $axios, redirect }) {
     console.log('onRequestError', error) // for debug
   })
 
+  // axios响应拦截，处理未登录状况
   $axios.onResponse((response) => {
     console.log('Reciving resposne', response)
     if (response.data.code === 0) {
@@ -24,6 +26,7 @@ export default function({ $axios, redirect }) {
       console.log('用户校验失败')
       // debugger
       cookie.set('userInfo', '')
+      // 跳转到登录页面
       window.location.href = '/'
     } else {
       Message({

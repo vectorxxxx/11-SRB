@@ -2,7 +2,9 @@ package xyz.funnyboy.srb.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.funnyboy.srb.core.pojo.entity.UserInfo;
+import xyz.funnyboy.srb.core.pojo.vo.LoginVO;
 import xyz.funnyboy.srb.core.pojo.vo.RegisterVO;
+import xyz.funnyboy.srb.core.pojo.vo.UserInfoVO;
 
 /**
  * <p>
@@ -21,4 +23,6 @@ public interface UserInfoService extends IService<UserInfo>
      * @param registerVO 注册 VO
      */
     void register(RegisterVO registerVO);
+
+    UserInfoVO login(LoginVO loginVO, String ip);
 }
