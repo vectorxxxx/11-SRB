@@ -139,6 +139,32 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     }
 
     /**
+     * 通过父级字典code和value获取字典名称
+     *
+     * @param dictCode 字典代码
+     * @param value    值
+     * @return {@link String}
+     */
+    @Override
+    public String getNameByParentDictCodeAndValue(String dictCode, Integer value) {
+        // 根据字典code获取父级字典
+        final Dict parentDict = baseMapper.selectOne(new LambdaQueryWrapper<Dict>().eq(Dict::getDictCode, dictCode));
+        if (parentDict == null) {
+            return "";
+        }
+
+        // 根据父级id和value获取子级字典
+        final Dict dict = baseMapper.selectOne(new LambdaQueryWrapper<Dict>()
+                .eq(Dict::getParentId, parentDict.getId())
+                .eq(Dict::getValue, value));
+
+        // 返回子级字典名称
+        return dict == null ?
+               "" :
+               dict.getName();
+    }
+
+    /**
      * 是否包含子节点
      *
      * @param parentId 编号
