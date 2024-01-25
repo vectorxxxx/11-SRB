@@ -28,7 +28,7 @@ import java.util.Locale;
 @Api(tags = "数据字典管理")
 @RestController
 @RequestMapping("/admin/core/dict")
-@CrossOrigin
+// @CrossOrigin
 @Slf4j
 public class AdminDictController
 {

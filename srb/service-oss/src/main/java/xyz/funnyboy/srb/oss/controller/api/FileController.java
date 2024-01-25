@@ -24,7 +24,7 @@ import java.io.IOException;
 @Api(tags = "阿里云文件管理")
 @RestController
 @RequestMapping("/api/oss/file")
-@CrossOrigin
+// @CrossOrigin
 @Slf4j
 public class FileController
 {

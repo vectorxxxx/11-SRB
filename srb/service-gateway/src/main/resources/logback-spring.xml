@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--=========================日志配置的根节点=========================-->
+<configuration>
+    <!--每个logger都关联到logger上下文，默认上下文名称为“default”。但可以使用<contextName>设置成其他名字，用于区分不同的应用程序。-->
+    <contextName>funnyboySrb</contextName>
+
+
+    <!--=========================通过<property>定义的值会被插入到logger上下文中。定义变量后，可以使“${}”来使用变量。=========================-->
+    <!-- 日志的输出目录 -->
+    <property name="log.path"
+              value="D:/workspace-mine/11-SRB/srb/srb_log/gateway"/>
+
+    <!--控制台日志格式：彩色日志-->
+    <!-- magenta:洋红 -->
+    <!-- boldMagenta:粗红-->
+    <!-- cyan:青色 -->
+    <!-- white:白色 -->
+    <!-- magenta:洋红 -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%yellow(%date{yyyy-MM-dd HH:mm:ss}) %highlight([%-5level]) %green(%logger) %msg%n"/>
+
+    <!--文件日志格式-->
+    <property name="FILE_LOG_PATTERN"
+              value="%date{yyyy-MM-dd HH:mm:ss} [%-5level] %thread %file:%line %logger %msg%n"/>
+
+    <!--编码-->
+    <property name="ENCODING"
+              value="UTF-8"/>
+
+
+    <!--==================================================负责写日志的组件==================================================-->
+    <!-- 控制台日志 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!--对日志进行格式化-->
+        <encoder>
+            <!--日志的具体输出格式-->
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <!--编码方式-->
+            <charset>${ENCODING}</charset>
+        </encoder>
+    </appender>
+
+    <!-- 文件日志 -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <!--日志文件的位置，如果上级目录不存在会自动创建，没有默认值。-->
+        <file>${log.path}/log.log</file>
+        <!--默认 true，日志被追加到文件结尾，如果是 false，服务重启后清空现存文件。-->
+        <append>true</append>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${ENCODING}</charset>
+        </encoder>
+    </appender>
+
+
+    <!--问题：生产环境下，如果系统长时间运行，那么日志文件会变得越来越大，系统读取和写入日志的时间会越来越慢，严重的情况会耗尽系统内存，导致系统宕机。-->
+    <!--解决方案：可以设置滚动日志。===========================================================================================-->
+    <!--RollingFileAppender是Appender的另一个实现，表示滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将旧日志备份到其他文件========-->
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <!--  要区别于其他的appender中的文件名字  -->
+        <file>${log.path}/log-rolling.log</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>${ENCODING}</charset>
+        </encoder>
+
+        <!-- 设置滚动日志记录的滚动策略 -->
+        <!-- TimeBasedRollingPolicy：最常用的滚动策略，根据时间来制定滚动策略。-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志归档路径以及格式 -->
+            <!-- 包含文件名及转换符， “%d”可以包含指定的时间格式，如：%d{yyyy-MM-dd}。如果直接使用 %d，默认格式是 yyyy-MM-dd。-->
+            <fileNamePattern>${log.path}/info/log-rolling-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 归档日志文件保留的最大数量-->
+            <!-- 可选节点，控制保留的归档文件的最大数量，超出数量就删除旧文件。假设设置每个月滚动，且<maxHistory>是6，则只保存最近6个月的文件，删除之前的旧文件。-->
+            <!-- 注意，删除旧文件时，那些为了归档而创建的目录也会被删除。-->
+            <maxHistory>15</maxHistory>
+
+            <!-- 基于大小和时间策略的触发滚动策略 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- 设置触发滚动条件：单个文件大于1KB时生成新的文件 -->
+                <maxFileSize>1KB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+    </appender>
+
+
+    <!--==================================================logger用来设置某一个包或具体某一个类的日志打印级别==================================================-->
+    <!-- 日志记录器  -->
+    <!--<logger name="xyz.funnyboy" level="INFO">-->
+    <!--    <appender-ref ref="CONSOLE"/>-->
+    <!--    <appender-ref ref="FILE"/>-->
+    <!--</logger>-->
+
+
+    <!--在一个基于Spring boot开发的项目里，常常需要有多套环境的配置：开发，测试以及产品。使用springProfile 可以分别配置开发（dev），测试（test）以及生产（prod）等不同的环境-->
+    <!-- 开发环境和测试环境 -->
+    <springProfile name="dev,test">
+        <logger name="xyz.funnyboy" level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ROLLING_FILE"/>
+        </logger>
+    </springProfile>
+
+    <!-- 生产环境 -->
+    <springProfile name="prod">
+        <logger name="xyz.funnyboy" level="ERROR">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+        </logger>
+    </springProfile>
+</configuration>
