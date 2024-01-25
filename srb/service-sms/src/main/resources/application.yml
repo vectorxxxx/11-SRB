@@ -18,6 +18,26 @@ spring:
         max-wait: -1    #最大阻塞等待时间，负值表示没限制，默认-1
         max-idle: 8     #最大空闲连接，默认8
         min-idle: 0     #最小空闲连接，默认0
+  cloud: # nacos配置
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
+# feign
+feign:
+  client:
+    config:
+      default:
+        # openfeign默认的连接超时时间为1秒，测试时很可能会出现远程调用超时错误。
+        connectTimeout: 10000 #连接超时配置
+        readTimeout: 600000 #执行超时配置
+  sentinel: # 开启Feign对Sentinel的支持
+    enabled: true
+
+# 指定监控的接口，以及日志级别
+logging:
+  level:
+    xyz.funnyboy.srb.sms.client.CoreUserInfoClient: DEBUG
 
 # 阿里云短信
 aliyun:

@@ -52,4 +52,12 @@ public interface UserInfoService extends IService<UserInfo>
      * @param status 状态
      */
     void lock(Long id, Integer status);
+
+    /**
+     * 校验手机号是否注册
+     *
+     * @param mobile 移动
+     * @return boolean
+     */
+    boolean checkMobile(String mobile);
 }

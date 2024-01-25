@@ -97,7 +97,8 @@
     <!--在一个基于Spring boot开发的项目里，常常需要有多套环境的配置：开发，测试以及产品。使用springProfile 可以分别配置开发（dev），测试（test）以及生产（prod）等不同的环境-->
     <!-- 开发环境和测试环境 -->
     <springProfile name="dev,test">
-        <logger name="xyz.funnyboy" level="INFO">
+        <!--<logger name="xyz.funnyboy" level="INFO">-->
+        <logger name="xyz.funnyboy" level="DEBUG">
             <appender-ref ref="CONSOLE"/>
             <appender-ref ref="ROLLING_FILE"/>
         </logger>

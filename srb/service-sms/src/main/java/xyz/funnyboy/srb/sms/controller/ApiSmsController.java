@@ -11,6 +11,7 @@ import xyz.funnyboy.common.result.R;
 import xyz.funnyboy.common.result.ResponseEnum;
 import xyz.funnyboy.common.util.RandomUtils;
 import xyz.funnyboy.common.util.RegexValidateUtils;
+import xyz.funnyboy.srb.sms.client.CoreUserInfoClient;
 import xyz.funnyboy.srb.sms.service.SmsService;
 import xyz.funnyboy.srb.sms.util.SmsProperties;
 
@@ -39,6 +40,9 @@ public class ApiSmsController
     @Resource
     private RedisTemplate redisTemplate;
 
+    @Resource
+    private CoreUserInfoClient coreUserInfoClient;
+
     @ApiOperation(value = "获取短信验证码")
     @GetMapping("send/{mobile}")
     public R sendSmsCode(
@@ -51,6 +55,7 @@ public class ApiSmsController
         // 校验手机号码
         Assert.notNull(mobile, ResponseEnum.MOBILE_NULL_ERROR);
         Assert.isTrue(RegexValidateUtils.checkCellphone(mobile), ResponseEnum.MOBILE_ERROR);
+        Assert.isTrue(!coreUserInfoClient.checkMobile(mobile), ResponseEnum.MOBILE_EXIST_ERROR);
 
         // 生成验证码
         final String code = RandomUtils.getFourBitRandom();

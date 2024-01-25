@@ -136,4 +136,15 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         userInfo.setStatus(status);
         baseMapper.updateById(userInfo);
     }
+
+    /**
+     * 校验手机号是否注册
+     *
+     * @param mobile 移动
+     * @return boolean
+     */
+    @Override
+    public boolean checkMobile(String mobile) {
+        return baseMapper.selectCount(new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getMobile, mobile)) > 0;
+    }
 }

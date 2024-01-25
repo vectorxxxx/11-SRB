@@ -112,7 +112,7 @@ public class UserInfoController
                     HttpServletRequest request) {
         // 获取token
         final String token = request.getHeader("token");
-        
+
         // 校验token
         Assert.notEmpty(token, ResponseEnum.LOGIN_AUTH_ERROR);
         Assert.isTrue(JwtUtils.checkToken(token), ResponseEnum.LOGIN_AUTH_ERROR);
@@ -121,6 +121,17 @@ public class UserInfoController
         return R
                 .ok()
                 .message("校验成功");
+    }
+
+    @ApiOperation("校验手机号是否注册")
+    @GetMapping("/checkMobile/{mobile}")
+    public boolean checkMobile(
+            @ApiParam(name = "mobile",
+                      value = "手机号",
+                      required = true)
+            @PathVariable("mobile")
+                    String mobile) {
+        return userInfoService.checkMobile(mobile);
     }
 }
 
