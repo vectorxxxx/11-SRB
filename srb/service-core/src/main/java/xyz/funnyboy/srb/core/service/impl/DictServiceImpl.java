@@ -127,6 +127,18 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     }
 
     /**
+     * 按字典代码查找
+     *
+     * @param dictCode 字典代码
+     * @return {@link List}<{@link Dict}>
+     */
+    @Override
+    public List<Dict> findByDictCode(String dictCode) {
+        final Dict dict = baseMapper.selectOne(new LambdaQueryWrapper<Dict>().eq(Dict::getDictCode, dictCode));
+        return this.listByParentId(dict.getId());
+    }
+
+    /**
      * 是否包含子节点
      *
      * @param parentId 编号
