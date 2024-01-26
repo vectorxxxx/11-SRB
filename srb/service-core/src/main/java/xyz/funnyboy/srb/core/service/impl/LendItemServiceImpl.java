@@ -219,6 +219,17 @@ public class LendItemServiceImpl extends ServiceImpl<LendItemMapper, LendItem> i
     }
 
     /**
+     * 获取投资列表信息
+     *
+     * @param lendId 借出 ID
+     * @return {@link List}<{@link LendItem}>
+     */
+    @Override
+    public List<LendItem> selectByLendId(Long lendId) {
+        return baseMapper.selectList(new LambdaQueryWrapper<LendItem>().eq(LendItem::getLendId, lendId));
+    }
+
+    /**
      * 通过投资记录No获取标的信息
      *
      * @param lendItemNo 借出物品编号

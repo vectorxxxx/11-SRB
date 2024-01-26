@@ -397,9 +397,21 @@ export default {
     const lendId = params.id
     const response = await $axios.$get(`/api/core/lend/show/${lendId}`)
     const lendDetail = response.data.lendDetail;
+
+    // 投资记录
+    const responseLendItemList = await $axios.$get(`/api/core/lendItem/list/${lendId}`)
+    const lendItemList = responseLendItemList.data.list
+
+    // 还款计划
+    const responseLendReturnList = await $axios.$get(`/api/core/lendReturn/list/${lendId}`)
+    const lendReturnList = responseLendReturnList.data.list
+
     return {
       lend: lendDetail.lend,  // 获取标的详情
       borrower: lendDetail.borrower,  // 获取借款人信息
+      lendItemList: lendItemList, // 投资记录
+      lendReturnList: lendReturnList, // 还款计划
+      lendItemReturnList: [], // 回款计划
     }
   },
 
@@ -422,6 +434,11 @@ export default {
 
     // 获取登录人的用户类型
     this.fetchUserType()
+  },
+
+  mounted() {
+    // 回款计划
+    this.fetchLendItemReturnList()
   },
 
   methods: {
@@ -509,6 +526,15 @@ export default {
             }
           }
       )
+    },
+
+    // 回款计划
+    fetchLendItemReturnList() {
+      this.$axios
+          .$get(`/api/core/lendItemReturn/list/${this.lend.id}`)
+          .then(response => {
+            this.lendItemReturnList = response.data.list
+          })
     }
   }
 }

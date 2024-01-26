@@ -132,6 +132,47 @@
       </tbody>
     </table>
 
+    <h4>投资记录</h4>
+    <el-table :data="lendItemList" stripe style="width: 100%" border>
+      <el-table-column type="index" label="序号" width="70" align="center" />
+      <el-table-column prop="lendItemNo" label="投资编号" />
+      <el-table-column prop="investName" label="投资用户" />
+      <el-table-column prop="investAmount" label="投资金额" />
+      <el-table-column label="年化利率">
+        <template slot-scope="scope">
+          {{ scope.row.lendYearRate * 100 }}%
+        </template>
+      </el-table-column>
+      <el-table-column prop="lendStartDate" label="开始日期" />
+      <el-table-column prop="lendEndDate" label="结束日期" />
+      <el-table-column prop="expectAmount" label="预期收益" />
+      <el-table-column prop="investTime" label="投资时间" />
+    </el-table>
+
+    <h4>还款计划</h4>
+    <el-table :data="lendReturnList" stripe style="width: 100%" border>
+      <el-table-column type="index" label="序号" width="70" align="center" />
+      <el-table-column prop="currentPeriod" label="当前的期数" />
+      <el-table-column prop="principal" label="本金" />
+      <el-table-column prop="interest" label="利息" />
+      <el-table-column prop="total" label="本息" />
+      <el-table-column prop="returnDate" label="还款日期" width="150" />
+      <el-table-column prop="realReturnTime" label="实际还款时间" />
+      <el-table-column label="是否逾期">
+        <template slot-scope="scope">
+          <span v-if="scope.row.overdue">
+            是（逾期金额：{{ scope.row.overdueTotal }}元）
+          </span>
+          <span v-else>否</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" width="80">
+        <template slot-scope="scope">
+          {{ scope.row.status === 0 ? '未还款' : '已还款' }}
+        </template>
+      </el-table-column>
+    </el-table>
+
     <el-row style="text-align:center;margin-top: 40px;">
       <el-button @click="back">
         返回
@@ -142,6 +183,9 @@
 
 <script>
 import lendApi from '@/api/core/lend'
+import lendItemApi from '@/api/core/lend-item'
+import lendReturnApi from '@/api/core/lend-return'
+
 import '@/styles/show.css'
 
 export default {
@@ -152,17 +196,26 @@ export default {
           param: {}
         },
         borrower: {}
-      }
+      }, // 标的信息
+      lendItemList: [], // 投资列表
+      lendReturnList: [] // 还款记录
     }
   },
 
   created() {
     if (this.$route.params.id) {
       this.fetchDataById()
+
+      // 投资记录
+      this.fetchLendItemList()
+
+      // 还款记录
+      this.fetchLendReturnList()
     }
   },
 
   methods: {
+    // 加载标的数据
     fetchDataById() {
       lendApi.show(this.$route.params.id).then(response => {
         this.lendDetail = response.data.lendDetail
@@ -171,6 +224,20 @@ export default {
 
     back() {
       this.$router.push({ path: '/core/lend/list' })
+    },
+
+    // 投资记录
+    fetchLendItemList() {
+      lendItemApi.getList(this.$route.params.id).then(response => {
+        this.lendItemList = response.data.list
+      })
+    },
+
+    // 还款记录
+    fetchLendReturnList() {
+      lendReturnApi.getList(this.$route.params.id).then(response => {
+        this.lendReturnList = response.data.list
+      })
     }
   }
 }

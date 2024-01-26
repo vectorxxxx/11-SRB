@@ -5,18 +5,17 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.funnyboy.common.result.R;
 import xyz.funnyboy.srb.base.util.JwtUtils;
 import xyz.funnyboy.srb.core.hfb.RequestHelper;
+import xyz.funnyboy.srb.core.pojo.entity.LendItem;
 import xyz.funnyboy.srb.core.pojo.vo.InvestVO;
 import xyz.funnyboy.srb.core.service.LendItemService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -88,6 +87,20 @@ public class LendItemController
         log.info("用户投资异步回调成功：{}", JSON.toJSONString(paramMap));
         lendItemService.notify(paramMap);
         return "success";
+    }
+
+    @ApiOperation("获取列表")
+    @GetMapping("/list/{lendId}")
+    public R list(
+            @ApiParam(name = "lendId",
+                      value = "标的id",
+                      required = true)
+            @PathVariable
+                    Long lendId) {
+        List<LendItem> lendItemList = lendItemService.selectByLendId(lendId);
+        return R
+                .ok()
+                .data("list", lendItemList);
     }
 }
 
