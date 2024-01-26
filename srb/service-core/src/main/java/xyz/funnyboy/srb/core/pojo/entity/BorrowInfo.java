@@ -12,6 +12,8 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -67,4 +69,16 @@ public class BorrowInfo implements Serializable
     @TableLogic
     private Boolean deleted;
 
+    //扩展字段
+    @ApiModelProperty(value = "姓名")
+    @TableField(exist = false)
+    private String name;
+
+    @ApiModelProperty(value = "手机")
+    @TableField(exist = false)
+    private String mobile;
+
+    @ApiModelProperty(value = "其他参数")
+    @TableField(exist = false)
+    private Map<String, Object> param = new HashMap<>();
 }

@@ -2,8 +2,11 @@ package xyz.funnyboy.srb.core.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.funnyboy.srb.core.pojo.entity.BorrowInfo;
+import xyz.funnyboy.srb.core.pojo.vo.BorrowInfoApprovalVO;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -39,4 +42,26 @@ public interface BorrowInfoService extends IService<BorrowInfo>
      * @return {@link Integer}
      */
     Integer getBorrowInfoStatus(Long userId);
+
+    /**
+     * 查询列表
+     *
+     * @return {@link List}<{@link BorrowInfo}>
+     */
+    List<BorrowInfo> selectList();
+
+    /**
+     * 获取借款信息详情
+     *
+     * @param id 编号
+     * @return {@link Map}<{@link String}, {@link Object}>
+     */
+    Map<String, Object> getBorrowInfoDetail(Long id);
+
+    /**
+     * 审批借款信息
+     *
+     * @param borrowInfoApprovalVO 借用信息审批
+     */
+    void approval(BorrowInfoApprovalVO borrowInfoApprovalVO);
 }

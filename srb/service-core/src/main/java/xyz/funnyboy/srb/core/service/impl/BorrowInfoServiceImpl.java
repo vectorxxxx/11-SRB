@@ -11,15 +11,18 @@ import xyz.funnyboy.srb.core.enums.BorrowerStatusEnum;
 import xyz.funnyboy.srb.core.enums.UserBindEnum;
 import xyz.funnyboy.srb.core.mapper.BorrowInfoMapper;
 import xyz.funnyboy.srb.core.pojo.entity.BorrowInfo;
+import xyz.funnyboy.srb.core.pojo.entity.Borrower;
 import xyz.funnyboy.srb.core.pojo.entity.IntegralGrade;
 import xyz.funnyboy.srb.core.pojo.entity.UserInfo;
-import xyz.funnyboy.srb.core.service.BorrowInfoService;
-import xyz.funnyboy.srb.core.service.IntegralGradeService;
-import xyz.funnyboy.srb.core.service.UserInfoService;
+import xyz.funnyboy.srb.core.pojo.vo.BorrowInfoApprovalVO;
+import xyz.funnyboy.srb.core.pojo.vo.BorrowerDetailVO;
+import xyz.funnyboy.srb.core.service.*;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -37,6 +40,12 @@ public class BorrowInfoServiceImpl extends ServiceImpl<BorrowInfoMapper, BorrowI
 
     @Resource
     private IntegralGradeService integralGradeService;
+
+    @Resource
+    private DictService dictService;
+
+    @Resource
+    private BorrowerService borrowerService;
 
     @Override
     public BigDecimal getBorrowAmount(Long userId) {
@@ -111,5 +120,79 @@ public class BorrowInfoServiceImpl extends ServiceImpl<BorrowInfoMapper, BorrowI
             return BorrowInfoStatusEnum.NO_AUTH.getStatus();
         }
         return (Integer) statusList.get(0);
+    }
+
+    /**
+     * 查询列表
+     *
+     * @return {@link List}<{@link BorrowInfo}>
+     */
+    @Override
+    public List<BorrowInfo> selectList() {
+        List<BorrowInfo> borrowInfoList = baseMapper.selectBorrowInfoList();
+        borrowInfoList.forEach(borrowInfo -> {
+            borrowInfo
+                    .getParam()
+                    .put("returnMethod", dictService.getNameByParentDictCodeAndValue("returnMethod", borrowInfo.getReturnMethod()));
+            borrowInfo
+                    .getParam()
+                    .put("moneyUse", dictService.getNameByParentDictCodeAndValue("moneyUse", borrowInfo.getMoneyUse()));
+            borrowInfo
+                    .getParam()
+                    .put("status", BorrowInfoStatusEnum.getMsgByStatus(borrowInfo.getStatus()));
+        });
+        return borrowInfoList;
+    }
+
+    /**
+     * 获取借款信息详情
+     *
+     * @param id 编号
+     * @return {@link Map}<{@link String}, {@link Object}>
+     */
+    @Override
+    public Map<String, Object> getBorrowInfoDetail(Long id) {
+        // 借款信息
+        final BorrowInfo borrowInfo = baseMapper.selectById(id);
+        borrowInfo
+                .getParam()
+                .put("returnMethod", dictService.getNameByParentDictCodeAndValue("returnMethod", borrowInfo.getReturnMethod()));
+        borrowInfo
+                .getParam()
+                .put("moneyUse", dictService.getNameByParentDictCodeAndValue("moneyUse", borrowInfo.getMoneyUse()));
+        borrowInfo
+                .getParam()
+                .put("status", BorrowInfoStatusEnum.getMsgByStatus(borrowInfo.getStatus()));
+
+        // 借款人信息
+        final Borrower borrower = borrowerService.getOne(new LambdaQueryWrapper<Borrower>().eq(Borrower::getUserId, borrowInfo.getUserId()));
+        final BorrowerDetailVO borrowerDetailVO = borrowerService.getBorrowerDetailVOById(borrower.getUserId());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("borrowInfo", borrowInfo);
+        result.put("borrower", borrowerDetailVO);
+        return result;
+    }
+
+    /**
+     * 审批借款信息
+     *
+     * @param borrowInfoApprovalVO 借用信息审批
+     */
+    @Override
+    public void approval(BorrowInfoApprovalVO borrowInfoApprovalVO) {
+        // 更新借款审核状态
+        final BorrowInfo borrowInfo = baseMapper.selectById(borrowInfoApprovalVO.getId());
+        borrowInfo.setStatus(borrowInfoApprovalVO.getStatus());
+        baseMapper.updateById(borrowInfo);
+
+        // TODO 审核通过则创建标的
+        if (borrowInfoApprovalVO
+                .getStatus()
+                .intValue() == BorrowInfoStatusEnum.CHECK_OK
+                .getStatus()
+                .intValue()) {
+
+        }
     }
 }
