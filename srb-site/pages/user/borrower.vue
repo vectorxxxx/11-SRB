@@ -173,6 +173,9 @@
         <div style="margin-top:40px;">
           <el-alert v-if="borrowerStatus === 2" title="您的认证审批已通过" type="success" show-icon :closable="false">
           </el-alert>
+          <NuxtLink to="/user/apply" v-if="borrowerStatus === 2">
+            <el-button style="margin-top:20px;" type="success">我要借款</el-button>
+          </NuxtLink>
 
           <el-alert v-if="borrowerStatus === -1" title="您的认证审批未通过" type="error" show-icon :closable="false">
           </el-alert>
