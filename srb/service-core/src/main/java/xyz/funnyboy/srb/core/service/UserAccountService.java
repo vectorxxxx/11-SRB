@@ -3,6 +3,7 @@ package xyz.funnyboy.srb.core.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import xyz.funnyboy.srb.core.pojo.entity.UserAccount;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -31,4 +32,12 @@ public interface UserAccountService extends IService<UserAccount>
      * @param paramMap 参数映射
      */
     void notify(Map<String, Object> paramMap);
+
+    /**
+     * 查询账户余额
+     *
+     * @param userId 用户 ID
+     * @return {@link BigDecimal}
+     */
+    BigDecimal getAccountAmount(Long userId);
 }

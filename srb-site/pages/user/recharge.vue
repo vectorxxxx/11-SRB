@@ -75,7 +75,6 @@ export default {
                     .$post('/api/core/userAccount/auth/commitCharge/' + _this.chargeAmt)
                     .then(response => {
                       let formStr = response.data.formStr;
-                      console.log(formStr)
                       document.write(formStr)
                     })
               }

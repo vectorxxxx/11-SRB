@@ -134,4 +134,17 @@ public class UserBindServiceImpl extends ServiceImpl<UserBindMapper, UserBind> i
         userInfo.setBindCode(userBind.getBindCode());
         userInfoService.updateById(userInfo);
     }
+
+    /**
+     * 根据用户 ID 获取绑定协议号
+     *
+     * @param userId 用户 ID
+     * @return {@link String}
+     */
+    @Override
+    public String getBindCodeByUserId(Long userId) {
+        return baseMapper
+                .selectOne(new LambdaQueryWrapper<UserBind>().eq(UserBind::getUserId, userId))
+                .getBindCode();
+    }
 }

@@ -4,10 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.funnyboy.common.result.R;
 import xyz.funnyboy.srb.core.pojo.entity.Lend;
 import xyz.funnyboy.srb.core.service.LendService;
@@ -53,6 +50,19 @@ public class AdminLendController
         return R
                 .ok()
                 .data("lendDetail", result);
+    }
+
+    @ApiOperation("放款")
+    @PostMapping("/makeLoan/{id}")
+    public R makeLoan(
+            @ApiParam(value = "标的id",
+                      required = true)
+            @PathVariable
+                    Long id) {
+        lendService.makeLoan(id);
+        return R
+                .ok()
+                .message("放款成功");
     }
 }
 

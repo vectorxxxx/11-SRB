@@ -5,10 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.funnyboy.common.result.R;
 import xyz.funnyboy.srb.base.util.JwtUtils;
 import xyz.funnyboy.srb.core.hfb.RequestHelper;
@@ -16,6 +13,7 @@ import xyz.funnyboy.srb.core.service.UserAccountService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -73,6 +71,16 @@ public class UserAccountController
         log.info("用户充值异步回调充值成功：" + JSON.toJSONString(paramMap));
         userAccountService.notify(paramMap);
         return "success";
+    }
+
+    @ApiOperation("查询账户余额")
+    @GetMapping("/auth/getAccountAmount")
+    public R getAccount(HttpServletRequest request) {
+        final Long userId = JwtUtils.getUserId(request.getHeader("token"));
+        BigDecimal accountAmount = userAccountService.getAccountAmount(userId);
+        return R
+                .ok()
+                .data("accountAmount", accountAmount);
     }
 }
 

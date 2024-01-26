@@ -32,4 +32,12 @@ public interface UserBindService extends IService<UserBind>
      * @param paramMap 参数映射
      */
     void notify(Map<String, Object> paramMap);
+
+    /**
+     * 根据用户 ID 获取绑定协议号
+     *
+     * @param userId 用户 ID
+     * @return {@link String}
+     */
+    String getBindCodeByUserId(Long userId);
 }

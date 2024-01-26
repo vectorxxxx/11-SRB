@@ -17,5 +17,13 @@ export default {
       url: `${api_name}/show/${id}`,
       method: 'get'
     })
+  },
+
+  // 放款
+  makeLoan(id) {
+    return request({
+      url: `${api_name}/makeLoan/${id}`,
+      method: 'post'
+    })
   }
 }

@@ -1,5 +1,6 @@
 package xyz.funnyboy.srb.core.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -107,5 +108,20 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
 
         // 增加交易流水
         transFlowService.saveTransFlow(new TransFlowBO(agentBillNo, bindCode, amount, TransTypeEnum.RECHARGE, "重置"));
+    }
+
+    /**
+     * 查询账户余额
+     *
+     * @param userId 用户 ID
+     * @return {@link BigDecimal}
+     */
+    @Override
+    public BigDecimal getAccountAmount(Long userId) {
+        // 根据userId查找用户账户
+        final UserAccount userAccount = baseMapper.selectOne(new LambdaQueryWrapper<UserAccount>()
+                .select(UserAccount::getAmount)
+                .eq(UserAccount::getUserId, userId));
+        return userAccount.getAmount();
     }
 }

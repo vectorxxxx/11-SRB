@@ -169,7 +169,7 @@ public class BorrowInfoServiceImpl extends ServiceImpl<BorrowInfoMapper, BorrowI
 
         // 借款人信息
         final Borrower borrower = borrowerService.getOne(new LambdaQueryWrapper<Borrower>().eq(Borrower::getUserId, borrowInfo.getUserId()));
-        final BorrowerDetailVO borrowerDetailVO = borrowerService.getBorrowerDetailVOById(borrower.getUserId());
+        final BorrowerDetailVO borrowerDetailVO = borrowerService.getBorrowerDetailVOById(borrower.getId());
 
         Map<String, Object> result = new HashMap<>();
         result.put("borrowInfo", borrowInfo);
