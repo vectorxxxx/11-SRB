@@ -79,7 +79,7 @@ public class UserInfo implements Serializable
     @ApiModelProperty(value = "状态（0：锁定 1：正常）")
     private Integer status;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 

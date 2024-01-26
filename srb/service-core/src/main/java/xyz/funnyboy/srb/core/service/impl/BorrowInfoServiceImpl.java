@@ -47,6 +47,9 @@ public class BorrowInfoServiceImpl extends ServiceImpl<BorrowInfoMapper, BorrowI
     @Resource
     private BorrowerService borrowerService;
 
+    @Resource
+    private LendService lendService;
+
     @Override
     public BigDecimal getBorrowAmount(Long userId) {
         // 获取用户积分
@@ -186,13 +189,13 @@ public class BorrowInfoServiceImpl extends ServiceImpl<BorrowInfoMapper, BorrowI
         borrowInfo.setStatus(borrowInfoApprovalVO.getStatus());
         baseMapper.updateById(borrowInfo);
 
-        // TODO 审核通过则创建标的
+        // 审核通过则创建标的
         if (borrowInfoApprovalVO
                 .getStatus()
                 .intValue() == BorrowInfoStatusEnum.CHECK_OK
                 .getStatus()
                 .intValue()) {
-
+            lendService.createLend(borrowInfoApprovalVO, borrowInfo);
         }
     }
 }

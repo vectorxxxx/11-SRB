@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,6 +14,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -72,6 +75,7 @@ public class Lend implements Serializable
     @ApiModelProperty(value = "投资人数")
     private Integer investNum;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "发布日期")
     private LocalDateTime publishDate;
 
@@ -105,6 +109,7 @@ public class Lend implements Serializable
     @ApiModelProperty(value = "放款人id")
     private LocalDateTime paymentAdminId;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
@@ -116,4 +121,7 @@ public class Lend implements Serializable
     @TableLogic
     private Boolean deleted;
 
+    @ApiModelProperty(value = "其他参数")
+    @TableField(exist = false)
+    private Map<String, Object> param = new HashMap<>();
 }
