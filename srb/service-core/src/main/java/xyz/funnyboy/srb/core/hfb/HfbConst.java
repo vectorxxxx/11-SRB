@@ -31,7 +31,7 @@ public class HfbConst
     //充值汇付宝平台url地址
     public static final String RECHARGE_URL = "http://localhost:9999/userAccount/AgreeBankCharge";
     //充值异步回调
-    public static final String RECHARGE_NOTIFY_URL = "http://localhost/api/account/userAccount/notify";
+    public static final String RECHARGE_NOTIFY_URL = "http://localhost/api/core/userAccount/notify";
     //充值同步回调
     public static final String RECHARGE_RETURN_URL = "http://localhost:3000/user";
 
