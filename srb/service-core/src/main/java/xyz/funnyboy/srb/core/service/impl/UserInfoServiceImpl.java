@@ -185,4 +185,17 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         indexVO.setLastLoginTime(userLoginRecord.getCreateTime());
         return indexVO;
     }
+
+    /**
+     * 通过绑定代码获取手机号
+     *
+     * @param bindCode 绑定代码
+     * @return {@link String}
+     */
+    @Override
+    public String getMobileByBindCode(String bindCode) {
+        return baseMapper
+                .selectOne(new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getBindCode, bindCode))
+                .getMobile();
+    }
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.funnyboy.common.exception.Assert;
 import xyz.funnyboy.common.result.ResponseEnum;
+import xyz.funnyboy.srb.base.dto.SmsDTO;
 import xyz.funnyboy.srb.core.enums.TransTypeEnum;
 import xyz.funnyboy.srb.core.hfb.FormHelper;
 import xyz.funnyboy.srb.core.hfb.HfbConst;
@@ -20,6 +21,8 @@ import xyz.funnyboy.srb.core.service.UserAccountService;
 import xyz.funnyboy.srb.core.service.UserBindService;
 import xyz.funnyboy.srb.core.service.UserInfoService;
 import xyz.funnyboy.srb.core.utils.LendNoUtils;
+import xyz.funnyboy.srb.rabbitutil.constant.MQConst;
+import xyz.funnyboy.srb.rabbitutil.service.MQService;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -46,6 +49,9 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
 
     @Resource
     private UserBindService userBindService;
+
+    @Resource
+    private MQService mqService;
 
     /**
      * 充值
@@ -112,7 +118,13 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
         baseMapper.updateAccount(bindCode, amount, BigDecimal.ZERO);
 
         // 增加交易流水
-        transFlowService.saveTransFlow(new TransFlowBO(agentBillNo, bindCode, amount, TransTypeEnum.RECHARGE, "重置"));
+        transFlowService.saveTransFlow(new TransFlowBO(agentBillNo, bindCode, amount, TransTypeEnum.RECHARGE, "充值"));
+
+        // 发消息
+        final SmsDTO smsDTO = new SmsDTO();
+        smsDTO.setMobile(userInfoService.getMobileByBindCode(bindCode));
+        smsDTO.setMessage("充值成功");
+        mqService.sendMessage(MQConst.EXCHANGE_TOPIC_SMS, MQConst.ROUTING_SMS_ITEM, smsDTO);
     }
 
     /**

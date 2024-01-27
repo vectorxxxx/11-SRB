@@ -31,6 +31,12 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
+  rabbitmq: # rabbitmq配置
+    host: localhost
+    port: 5672
+    virtual-host: /srbhost
+    username: srbuser
+    password: srbuser
 
 # mybatis
 mybatis-plus:
