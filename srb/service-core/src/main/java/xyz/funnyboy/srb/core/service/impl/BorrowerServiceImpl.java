@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import xyz.funnyboy.srb.core.enums.BorrowerStatusEnum;
@@ -52,6 +53,7 @@ public class BorrowerServiceImpl extends ServiceImpl<BorrowerMapper, Borrower> i
      * @param borrowerVO 借款人VO
      * @param userId     用户 ID
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void saveBorrower(BorrowerVO borrowerVO, Long userId) {
         final UserInfo userInfo = userInfoService.getById(userId);
@@ -167,6 +169,7 @@ public class BorrowerServiceImpl extends ServiceImpl<BorrowerMapper, Borrower> i
      *
      * @param borrowerApprovalVO 借款人批准VO
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void approval(BorrowerApprovalVO borrowerApprovalVO) {
         // 借款人认证状态

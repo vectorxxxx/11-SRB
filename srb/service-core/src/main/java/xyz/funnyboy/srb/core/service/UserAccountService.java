@@ -40,4 +40,20 @@ public interface UserAccountService extends IService<UserAccount>
      * @return {@link BigDecimal}
      */
     BigDecimal getAccountAmount(Long userId);
+
+    /**
+     * 用户提现
+     *
+     * @param fetchAmt 获取 AMT
+     * @param userId   用户 ID
+     * @return {@link String}
+     */
+    String commitWithdraw(Long fetchAmt, Long userId);
+
+    /**
+     * 用户提现异步回调
+     *
+     * @param paramMap 参数映射
+     */
+    void notifyWithdraw(Map<String, Object> paramMap);
 }

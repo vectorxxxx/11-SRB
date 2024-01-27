@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.funnyboy.common.exception.Assert;
 import xyz.funnyboy.common.result.ResponseEnum;
 import xyz.funnyboy.srb.base.util.JwtUtils;
@@ -46,6 +47,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
      *
      * @param registerVO 注册 VO
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void register(RegisterVO registerVO) {
         // 是否已注册
@@ -74,6 +76,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
      * @param ip      ip
      * @return {@link UserInfoVO}
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public UserInfoVO login(LoginVO loginVO, String ip) {
         // 查询用户信息

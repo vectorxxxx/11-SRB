@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.funnyboy.common.exception.Assert;
 import xyz.funnyboy.common.result.ResponseEnum;
 import xyz.funnyboy.srb.core.enums.LendStatusEnum;
@@ -168,6 +169,7 @@ public class LendItemServiceImpl extends ServiceImpl<LendItemMapper, LendItem> i
      *
      * @param paramMap 参数映射
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void notify(Map<String, Object> paramMap) {
         // 幂等性返回

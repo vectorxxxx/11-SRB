@@ -535,6 +535,27 @@ export default {
           .then(response => {
             this.lendItemReturnList = response.data.list
           })
+    },
+
+    // 还款
+    commitReturn(lendReturnId) {
+      this.$alert(
+          '<div style="size: 18px;color: red;">您即将前往汇付宝确认还款</div>',
+          '前往汇付宝资金托管平台',
+          {
+            dangerouslyUseHTMLString: true,
+            confirmButtonText: '立即前往',
+            callback: action => {
+              if (action === 'confirm') {
+                this.$axios
+                    .$post(`/api/core/lendReturn/auth/commitReturn/${lendReturnId}`)
+                    .then(response => {
+                      document.write(response.data.formStr)
+                    })
+              }
+            }
+          }
+      )
     }
   }
 }

@@ -82,5 +82,46 @@ public class UserAccountController
                 .ok()
                 .data("accountAmount", accountAmount);
     }
+
+    @ApiOperation("用户提现")
+    @PostMapping("/auth/commitWithdraw/{fetchAmt}")
+    public R commitWithdraw(
+            @ApiParam(name = "fetchAmt",
+                      value = "提现金额",
+                      required = true)
+            @PathVariable
+                    Long fetchAmt,
+
+            HttpServletRequest request) {
+        final Long userId = JwtUtils.getUserId(request.getHeader("token"));
+        String formStr = userAccountService.commitWithdraw(fetchAmt, userId);
+        return R
+                .ok()
+                .data("formStr", formStr);
+    }
+
+    @ApiOperation("用户提现异步回调")
+    @PostMapping("/notifyWithdraw")
+    public String notifyWithdraw(HttpServletRequest request) {
+        final Map<String, Object> paramMap = RequestHelper.switchMap(request.getParameterMap());
+        log.info("用户提现异步回调：{}", JSON.toJSONString(paramMap));
+
+        if (!RequestHelper.isSignEquals(paramMap)) {
+            log.error("用户提现异步回调签名验证失败");
+            // return "fail";
+        }
+
+        // result_code	string		是	结果编码：
+        //                      0001=申请提现成功
+        // result_msg	string	100	是	提现申请结果描述
+        if (!"0001".equals(paramMap.get("resultCode"))) {
+            log.error("用户提现异步回调提现失败：{}", JSON.toJSONString(paramMap));
+            return "fail";
+        }
+
+        userAccountService.notifyWithdraw(paramMap);
+        log.info("用户提现异步回调提现成功：" + JSON.toJSONString(paramMap));
+        return "success";
+    }
 }
 

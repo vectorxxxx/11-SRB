@@ -3,6 +3,7 @@ package xyz.funnyboy.srb.core.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import xyz.funnyboy.common.exception.Assert;
 import xyz.funnyboy.common.result.ResponseEnum;
@@ -182,6 +183,7 @@ public class BorrowInfoServiceImpl extends ServiceImpl<BorrowInfoMapper, BorrowI
      *
      * @param borrowInfoApprovalVO 借用信息审批
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void approval(BorrowInfoApprovalVO borrowInfoApprovalVO) {
         // 更新借款审核状态
