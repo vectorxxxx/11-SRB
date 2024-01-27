@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -75,8 +76,9 @@ public class LendItemReturn implements Serializable
     @ApiModelProperty(value = "还款时指定的还款日期")
     private LocalDate returnDate;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "实际发生的还款时间")
-    private LocalDateTime realReturnTime;
+    private LocalDateTime ReturnTime;
 
     @ApiModelProperty(value = "是否逾期")
     @TableField("is_overdue")

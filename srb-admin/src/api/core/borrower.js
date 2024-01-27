@@ -7,7 +7,7 @@ export default {
     return request({
       url: `${api_name}/list/${page}/${limit}`,
       method: 'get',
-      params: keyword
+      params: { keyword }
     })
   },
 

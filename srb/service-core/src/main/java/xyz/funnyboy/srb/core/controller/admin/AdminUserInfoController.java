@@ -49,8 +49,6 @@ public class AdminUserInfoController
             @ApiParam(name = "searchObj",
                       value = "查询对象",
                       required = false)
-            @RequestParam(name = "searchObj",
-                          required = false)
                     UserInfoQuery userInfoQuery) {
         final Page<UserInfo> pageParam = new Page<>(page, limit);
         final IPage<UserInfo> pageModel = userInfoService.listPage(pageParam, userInfoQuery);
