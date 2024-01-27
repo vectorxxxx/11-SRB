@@ -18,6 +18,7 @@ import xyz.funnyboy.srb.core.pojo.entity.UserLoginRecord;
 import xyz.funnyboy.srb.core.pojo.query.UserInfoQuery;
 import xyz.funnyboy.srb.core.pojo.vo.LoginVO;
 import xyz.funnyboy.srb.core.pojo.vo.RegisterVO;
+import xyz.funnyboy.srb.core.pojo.vo.UserIndexVO;
 import xyz.funnyboy.srb.core.pojo.vo.UserInfoVO;
 import xyz.funnyboy.srb.core.service.UserAccountService;
 import xyz.funnyboy.srb.core.service.UserInfoService;
@@ -149,5 +150,39 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
     @Override
     public boolean checkMobile(String mobile) {
         return baseMapper.selectCount(new LambdaQueryWrapper<UserInfo>().eq(UserInfo::getMobile, mobile)) > 0;
+    }
+
+    /**
+     * 获取个人空间用户信息
+     *
+     * @param userId 用户 ID
+     * @return {@link UserIndexVO}
+     */
+    @Override
+    public UserIndexVO getIndexUserInfo(Long userId) {
+        // 用户信息
+        final UserInfo userInfo = baseMapper.selectById(userId);
+
+        // 账户信息
+        final UserAccount userAccount = userAccountService.getOne(new LambdaQueryWrapper<UserAccount>().eq(UserAccount::getUserId, userId));
+
+        // 登录信息
+        final UserLoginRecord userLoginRecord = userLoginRecordService.getOne(new LambdaQueryWrapper<UserLoginRecord>()
+                .eq(UserLoginRecord::getUserId, userId)
+                .orderByDesc(UserLoginRecord::getId)
+                .last("limit 1"));
+
+        // 返回结果
+        final UserIndexVO indexVO = new UserIndexVO();
+        indexVO.setUserId(userId);
+        indexVO.setName(userInfo.getName());
+        indexVO.setNickName(userInfo.getNickName());
+        indexVO.setUserType(userInfo.getUserType());
+        indexVO.setHeadImg(userInfo.getHeadImg());
+        indexVO.setBindStatus(userInfo.getBindStatus());
+        indexVO.setAmount(userAccount.getAmount());
+        indexVO.setFreezeAmount(userAccount.getFreezeAmount());
+        indexVO.setLastLoginTime(userLoginRecord.getCreateTime());
+        return indexVO;
     }
 }

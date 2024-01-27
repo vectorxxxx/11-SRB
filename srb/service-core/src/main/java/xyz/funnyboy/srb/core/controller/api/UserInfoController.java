@@ -13,6 +13,7 @@ import xyz.funnyboy.common.util.RegexValidateUtils;
 import xyz.funnyboy.srb.base.util.JwtUtils;
 import xyz.funnyboy.srb.core.pojo.vo.LoginVO;
 import xyz.funnyboy.srb.core.pojo.vo.RegisterVO;
+import xyz.funnyboy.srb.core.pojo.vo.UserIndexVO;
 import xyz.funnyboy.srb.core.pojo.vo.UserInfoVO;
 import xyz.funnyboy.srb.core.service.UserInfoService;
 
@@ -132,6 +133,16 @@ public class UserInfoController
             @PathVariable("mobile")
                     String mobile) {
         return userInfoService.checkMobile(mobile);
+    }
+
+    @ApiOperation("获取个人空间用户信息")
+    @GetMapping("/auth/getIndexUserInfo")
+    public R getIndexUserInfo(HttpServletRequest request) {
+        final Long userId = JwtUtils.getUserId(request.getHeader("token"));
+        UserIndexVO userIndexVO = userInfoService.getIndexUserInfo(userId);
+        return R
+                .ok()
+                .data("userIndexVO", userIndexVO);
     }
 }
 

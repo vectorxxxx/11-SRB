@@ -11,6 +11,7 @@ import xyz.funnyboy.srb.core.service.TransFlowService;
 import xyz.funnyboy.srb.core.service.UserInfoService;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -61,5 +62,18 @@ public class TransFlowServiceImpl extends ServiceImpl<TransFlowMapper, TransFlow
     @Override
     public boolean isSaveTransFlow(String agentBillNo) {
         return baseMapper.selectCount(new LambdaQueryWrapper<TransFlow>().eq(TransFlow::getTransNo, agentBillNo)) > 0;
+    }
+
+    /**
+     * 按用户ID查询
+     *
+     * @param userId 用户 ID
+     * @return {@link List}<{@link TransFlow}>
+     */
+    @Override
+    public List<TransFlow> selectByUserId(Long userId) {
+        return baseMapper.selectList(new LambdaQueryWrapper<TransFlow>()
+                .eq(TransFlow::getUserId, userId)
+                .orderByDesc(TransFlow::getId));
     }
 }
