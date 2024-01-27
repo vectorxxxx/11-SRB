@@ -200,6 +200,6 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
         baseMapper.updateAccount(bindCode, new BigDecimal("-" + fetchAmt), BigDecimal.ZERO);
 
         // 增加交易流水
-        transFlowService.saveTransFlow(new TransFlowBO(agentBillNo, bindCode, BigDecimal.valueOf(Long.parseLong(fetchAmt)), TransTypeEnum.WITHDRAW, "提现"));
+        transFlowService.saveTransFlow(new TransFlowBO(agentBillNo, bindCode, BigDecimal.valueOf(Double.parseDouble(fetchAmt)), TransTypeEnum.WITHDRAW, "提现"));
     }
 }

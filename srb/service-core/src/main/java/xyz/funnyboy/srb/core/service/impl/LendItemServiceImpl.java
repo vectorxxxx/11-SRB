@@ -77,12 +77,12 @@ public class LendItemServiceImpl extends ServiceImpl<LendItemMapper, LendItem> i
         // 2、标的不能超卖：(已投金额 + 本次投资金额 )>=标的金额（超卖）
         final BigDecimal sum = lend
                 .getInvestAmount()
-                .add(BigDecimal.valueOf(Long.parseLong(investVO.getInvestAmount())));
+                .add(BigDecimal.valueOf(Double.parseDouble(investVO.getInvestAmount())));
         Assert.isTrue(sum.compareTo(lend.getAmount()) <= 0, ResponseEnum.LEND_FULL_SCALE_ERROR);
         // 3、账户可用余额充足
         final Long investUserId = investVO.getInvestUserId();
         final BigDecimal amount = userAccountService.getAccountAmount(investUserId);
-        Assert.isTrue(amount.compareTo(BigDecimal.valueOf(Long.parseLong(investVO.getInvestAmount()))) >= 0, ResponseEnum.NOT_SUFFICIENT_FUNDS_ERROR);
+        Assert.isTrue(amount.compareTo(BigDecimal.valueOf(Double.parseDouble(investVO.getInvestAmount()))) >= 0, ResponseEnum.NOT_SUFFICIENT_FUNDS_ERROR);
 
         // 在商户平台中生成投资信息==========================================
         // 标的下的投资信息
@@ -97,7 +97,7 @@ public class LendItemServiceImpl extends ServiceImpl<LendItemMapper, LendItem> i
         // 标的id
         lendItem.setLendId(lendId);
         // 投资金额
-        lendItem.setInvestAmount(BigDecimal.valueOf(Long.parseLong(investVO.getInvestAmount())));
+        lendItem.setInvestAmount(BigDecimal.valueOf(Double.parseDouble(investVO.getInvestAmount())));
         // 年化利率
         lendItem.setLendYearRate(lend.getLendYearRate());
         // 投资时间
@@ -195,7 +195,7 @@ public class LendItemServiceImpl extends ServiceImpl<LendItemMapper, LendItem> i
         // 修改标的信息：投资人数、已投金额
         final Lend lend = lendService.getById(lendItem.getLendId());
         lend.setInvestNum(lend.getInvestNum() + 1);
-        final BigDecimal amount = BigDecimal.valueOf(Long.parseLong(voteAmt));
+        final BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(voteAmt));
         lend.setInvestAmount(lend
                 .getInvestAmount()
                 .add(amount));

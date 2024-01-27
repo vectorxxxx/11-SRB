@@ -136,9 +136,9 @@ public class LendReturnServiceImpl extends ServiceImpl<LendReturnMapper, LendRet
         // agent_batch_no	string	50	是	批次号
         final String agentBatchNo = (String) paramMap.get("agentBatchNo");
         // total_amt	decimal		是	扣款额
-        final BigDecimal totalAmt = (BigDecimal) paramMap.get("totalAmt");
+        final BigDecimal totalAmt = BigDecimal.valueOf(Double.parseDouble((String) paramMap.get("totalAmt")));
         // vote_fee_amt	decimal		是	商户手续费。最多小数点后两位，不能小于0。
-        final BigDecimal voteFeeAmt = (BigDecimal) paramMap.get("voteFeeAmt");
+        final BigDecimal voteFeeAmt = BigDecimal.valueOf(Double.parseDouble((String) paramMap.get("voteFeeAmt")));
 
         // 判断是否重复提交
         if (transFlowService.isSaveTransFlow(agentBatchNo)) {
